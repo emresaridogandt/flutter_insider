@@ -1,0 +1,67 @@
+group 'com.useinsider.insider.flutter_insider'
+version '5.5.0+nh-SNAPSHOT'
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.4.2'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://mobilesdk.useinsider.com/android" }
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 36
+
+    defaultConfig {
+        minSdkVersion 24
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    def gradleVersion = gradle.gradleVersion.tokenize('.')
+    def major = gradleVersion[0].toInteger()
+
+    if (major >= 8) {
+        namespace "com.useinsider.insider.flutter_insider"
+    }
+}
+
+dependencies {
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation "androidx.work:work-runtime:2.9.1"
+
+    implementation 'com.google.firebase:firebase-messaging:24.0.0'
+    implementation 'com.google.android.gms:play-services-location:21.3.0'
+    implementation 'com.google.android.play:review:2.0.1'
+
+    // App Frames requires androidx.webkit at runtime. The Insider SDK declares it `compileOnly`
+    // (it guards for absence and silently degrades), so the consumer must provide it.
+    implementation 'androidx.webkit:webkit:1.16.0'
+
+    implementation 'com.useinsider:insider:17.3.2-nh'
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:5.14.2'
+    testImplementation 'org.json:json:20240303'
+}
